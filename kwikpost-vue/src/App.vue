@@ -1,15 +1,15 @@
 <script setup>
+// App principal con router-view
 </script>
 
 <template>
-  <main class="main">
-  </main>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
-<style scoped>
-.main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
+<style>
+#app {
+  min-height: 100vh;
 }
 </style>
