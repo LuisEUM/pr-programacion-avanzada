@@ -1,22 +1,42 @@
+<!--
+  PostDetailView.vue - Vista detallada de un post individual
+  
+  Funcionalidad principal:
+  - Muestra el contenido completo de un post específico
+  - Permite ver y crear respuestas al post
+  - Proporciona opciones de edición/eliminación para el autor
+  - Maneja la navegación y confirmación de acciones destructivas
+  
+  Características clave:
+  - Vista completa del post sin truncamiento de contenido
+  - Sistema de respuestas anidadas con formulario integrado
+  - Controles de autor (editar/eliminar) con validación de permisos
+  - Modal de confirmación para eliminación de posts
+  - Navegación responsive con barra inferior móvil
+  - Integración completa con la API para CRUD de posts y respuestas
+  - Manejo de estados de carga y errores
+-->
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
+    <!-- Header con navegación de regreso -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div class="max-w-4xl mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
+          <!-- Enlace de regreso al home con indicador visual -->
           <router-link to="/" class="text-xl font-bold text-gray-900 hover:text-primary-600">
             ← KwikPost
           </router-link>
+          <!-- Título de la sección -->
           <h1 class="text-lg font-semibold text-gray-900">Post</h1>
           <div></div>
         </div>
       </div>
     </header>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal del post -->
     <main class="max-w-4xl mx-auto px-4 py-6 pb-20 md:pb-6">
       <div class="space-y-6">
-        <!-- Indicador de carga -->
+        <!-- Indicador de carga inicial -->
         <div v-if="loading" class="text-center py-8">
           <div class="inline-flex items-center px-4 py-2 text-sm text-gray-600">
             <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -27,12 +47,13 @@
           </div>
         </div>
 
-        <!-- Post principal -->
+        <!-- Contenido del post principal -->
         <div v-if="post" class="space-y-4">
-          <!-- Contenido del post con botones de acción -->
+          <!-- Tarjeta del post con información completa -->
           <div class="card p-6">
-            <!-- Header con avatar y autor -->
+            <!-- Header con información del autor y timestamp -->
             <div class="flex items-center space-x-3 mb-4">
+              <!-- Avatar del autor (más grande que en las tarjetas de lista) -->
               <img 
                 :src="post.author.avatarUrl" 
                 :alt="`Avatar de ${post.author.name}`"
@@ -42,22 +63,25 @@
                 <h3 class="font-semibold text-gray-900">{{ post.author.name }}</h3>
                 <p class="text-sm text-gray-500">@{{ post.author.username }}</p>
               </div>
+              <!-- Fecha de publicación -->
               <span class="text-sm text-gray-500">{{ formatDate(post.createdAt) }}</span>
             </div>
 
-            <!-- Contenido completo del post -->
+            <!-- Contenido completo del post (sin truncamiento) -->
             <div class="mb-4">
               <p class="text-gray-800 text-lg leading-relaxed">{{ post.content }}</p>
             </div>
 
-            <!-- Botones de acción (solo si es el autor) -->
+            <!-- Botones de acción (solo visibles para el autor del post) -->
             <div v-if="isAuthor" class="flex space-x-2 pt-4 border-t border-gray-200">
+              <!-- Botón de edición -->
               <router-link 
                 :to="`/post/form/${post.id}`"
                 class="btn-secondary"
               >
                 Editar
               </router-link>
+              <!-- Botón de eliminación con confirmación -->
               <button 
                 @click="confirmDelete"
                 class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
@@ -67,28 +91,31 @@
             </div>
           </div>
 
-          <!-- Sección de respuestas -->
+          <!-- Sección de respuestas al post -->
           <div class="space-y-4">
+            <!-- Título de la sección con contador -->
             <h3 class="text-lg font-semibold text-gray-900">
               Respuestas ({{ post.replies?.length || 0 }})
             </h3>
 
-            <!-- Formulario para nueva respuesta -->
+            <!-- Formulario para crear nueva respuesta -->
             <ReplyForm 
               :post-id="post.id"
               @submit="handleNewReply"
             />
 
-            <!-- Lista de respuestas -->
+            <!-- Lista de respuestas existentes -->
             <div v-if="post.replies && post.replies.length > 0" class="space-y-3">
               <div 
                 v-for="reply in post.replies" 
                 :key="reply.id"
                 class="ml-4 border-l-2 border-gray-200 pl-4"
               >
+                <!-- Tarjeta individual de respuesta -->
                 <div class="card p-4">
-                  <!-- Header de la respuesta -->
+                  <!-- Header de la respuesta con información del autor -->
                   <div class="flex items-center space-x-3 mb-3">
+                    <!-- Avatar del autor de la respuesta (más pequeño) -->
                     <img 
                       :src="reply.author.avatarUrl" 
                       :alt="`Avatar de ${reply.author.name}`"
@@ -99,6 +126,7 @@
                       <p class="text-xs text-gray-500">@{{ reply.author.username }}</p>
                     </div>
                     <div class="flex-grow"></div>
+                    <!-- Timestamp de la respuesta -->
                     <span class="text-xs text-gray-500">{{ formatDate(reply.createdAt) }}</span>
                   </div>
 
@@ -108,7 +136,7 @@
               </div>
             </div>
 
-            <!-- Mensaje cuando no hay respuestas -->
+            <!-- Estado vacío cuando no hay respuestas -->
             <div v-else class="text-center py-6 text-gray-500">
               <p>No hay respuestas aún. ¡Sé el primero en responder!</p>
             </div>
@@ -124,9 +152,10 @@
       </div>
     </main>
 
-    <!-- Barra de navegación inferior para mobile -->
+    <!-- Barra de navegación inferior para dispositivos móviles -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden">
       <div class="flex items-center justify-around py-2">
+        <!-- Home -->
         <router-link 
           to="/" 
           class="flex flex-col items-center p-2 text-gray-400"
@@ -136,7 +165,9 @@
           </svg>
         </router-link>
         
+        <!-- Perfil del usuario -->
         <router-link 
+          v-if="sessionStore.user?.username"
           :to="`/profile/${sessionStore.user.username}`"
           class="flex flex-col items-center p-2 text-gray-400"
         >
@@ -145,6 +176,7 @@
           </svg>
         </router-link>
         
+        <!-- Botón de logout -->
         <button 
           @click="handleLogout"
           class="flex flex-col items-center p-2 text-gray-400"
@@ -156,18 +188,23 @@
       </div>
     </nav>
 
-    <!-- Modal de confirmación para eliminar -->
+    <!-- Modal de confirmación para eliminación de post -->
     <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+        <!-- Título del modal -->
         <h3 class="text-lg font-semibold text-gray-900 mb-4">¿Eliminar post?</h3>
+        <!-- Mensaje de advertencia -->
         <p class="text-gray-600 mb-6">Esta acción no se puede deshacer.</p>
+        <!-- Botones de acción -->
         <div class="flex space-x-4">
+          <!-- Cancelar eliminación -->
           <button 
             @click="showDeleteModal = false"
             class="btn-secondary flex-1"
           >
             Cancelar
           </button>
+          <!-- Confirmar eliminación -->
           <button 
             @click="deletePost"
             class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex-1"
@@ -187,28 +224,37 @@ import { useSessionStore } from '@/store/session';
 import api from '@/api';
 import ReplyForm from '@/components/ReplyForm.vue';
 
+// Composables de Vue Router y store
 const route = useRoute();
 const router = useRouter();
 const sessionStore = useSessionStore();
 
-const post = ref(null);
-const loading = ref(false);
-const errorMessage = ref('');
-const showDeleteModal = ref(false);
+// Estado reactivo del componente
+const post = ref(null); // Datos del post cargado
+const loading = ref(false); // Estado de carga
+const errorMessage = ref(''); // Mensajes de error
+const showDeleteModal = ref(false); // Control del modal de confirmación
 
+// Computed property para determinar si el usuario actual es el autor del post
 const isAuthor = computed(() => {
   return post.value?.author.username === sessionStore.user?.username;
 });
 
+/**
+ * Función para cargar los datos del post desde la API
+ * Incluye manejo de errores específicos (404, etc.)
+ */
 const loadPost = async () => {
   loading.value = true;
   errorMessage.value = '';
   
   try {
-    const response = await api.get(`/posts/${route.params.id}`);
+    // Obtener post por ID desde los parámetros de la ruta
+    const response = await api.getPost(route.params.id);
     post.value = response.data;
   } catch (error) {
     console.error('Error loading post:', error);
+    // Manejo específico de errores
     if (error.response?.status === 404) {
       errorMessage.value = 'Post no encontrado.';
     } else {
@@ -219,9 +265,15 @@ const loadPost = async () => {
   }
 };
 
+/**
+ * Manejador para crear nueva respuesta al post
+ * Recarga el post para mostrar la respuesta actualizada
+ * @param {Object} replyData - Datos de la respuesta (postId, content)
+ */
 const handleNewReply = async (replyData) => {
   try {
-    await api.post('/replies', replyData);
+    // Crear respuesta usando la API
+    await api.createReply(replyData.postId, replyData.content);
     // Recargar el post para obtener las respuestas actualizadas
     await loadPost();
   } catch (error) {
@@ -230,26 +282,43 @@ const handleNewReply = async (replyData) => {
   }
 };
 
+/**
+ * Mostrar modal de confirmación para eliminación
+ */
 const confirmDelete = () => {
   showDeleteModal.value = true;
 };
 
+/**
+ * Eliminar el post tras confirmación
+ * Redirige al home tras eliminación exitosa
+ */
 const deletePost = async () => {
   try {
-    await api.delete(`/posts/${post.value.id}`);
+    await api.deletePost(post.value.id);
+    // Redirigir al home tras eliminación exitosa
     router.push('/');
   } catch (error) {
     console.error('Error deleting post:', error);
     errorMessage.value = 'Error al eliminar el post. Por favor, intenta de nuevo.';
+    // Cerrar modal en caso de error
     showDeleteModal.value = false;
   }
 };
 
+/**
+ * Manejo del logout
+ */
 const handleLogout = () => {
   sessionStore.logout();
   router.push('/login');
 };
 
+/**
+ * Función utilitaria para formatear fechas
+ * @param {string} dateString - Fecha en formato ISO
+ * @returns {string} - Fecha formateada en español
+ */
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('es-ES', {
@@ -261,6 +330,7 @@ const formatDate = (dateString) => {
   });
 };
 
+// Cargar post al montar el componente
 onMounted(() => {
   loadPost();
 });
