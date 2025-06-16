@@ -131,35 +131,54 @@ node api.js
 
 ## 🏗️ Arquitectura del Proyecto
 
-### Componentes Principales
+### Estructura de Componentes Organizada
 
-#### Componentes de Layout y Navegación
+La aplicación utiliza una arquitectura de componentes bien estructurada, organizados por categorías funcionales:
 
-- **AppHeader**: Header reutilizable con navegación, avatares y botones de acción
-- **MobileNavigation**: Barra de navegación inferior para dispositivos móviles
-- **FloatingActionButton**: Botón flotante responsive para crear posts
+```
+src/components/
+├── ui/           # Componentes básicos reutilizables
+├── forms/        # Componentes relacionados con formularios
+├── layout/       # Componentes de navegación y estructura
+└── content/      # Componentes específicos del dominio
+```
 
-#### Componentes de Contenido
+#### 📁 Componentes UI (`/ui`)
 
-- **PostCard**: Tarjeta individual de post con truncamiento inteligente
-- **PostList**: Lista de posts con paginación y estados vacíos
-- **ReplyCard**: Tarjeta individual de respuesta con diseño compacto
-- **UserProfileHeader**: Header de perfil con información del usuario
+Componentes básicos y reutilizables para la interfaz de usuario:
+
 - **UserAvatar**: Avatar de usuario con tamaños configurables (xs, sm, md, lg, xl)
-
-#### Componentes de Formularios
-
-- **TextAreaField**: Campo de textarea reutilizable con validación en tiempo real
-- **ReplyForm**: Formulario para crear/editar respuestas
-- **FormActions**: Grupo de botones para formularios con estados de carga
-
-#### Componentes de UI/UX
-
 - **LoadingSpinner**: Indicador de carga con mensajes personalizables
 - **ErrorMessage**: Componente para mostrar mensajes de error
 - **SuccessMessage**: Componente para mostrar mensajes de éxito
 - **EmptyState**: Estado vacío reutilizable con iconos y acciones opcionales
 - **ConfirmationModal**: Modal de confirmación para acciones destructivas
+
+#### 📁 Componentes de Formularios (`/forms`)
+
+Componentes especializados para manejo de formularios:
+
+- **TextAreaField**: Campo de textarea reutilizable con validación en tiempo real
+- **ReplyForm**: Formulario para crear/editar respuestas
+- **FormActions**: Grupo de botones para formularios con estados de carga
+- **LoginForm**: Formulario de inicio de sesión con validación
+
+#### 📁 Componentes de Layout (`/layout`)
+
+Componentes de navegación y estructura de la aplicación:
+
+- **AppHeader**: Header reutilizable con navegación, avatares y botones de acción
+- **MobileNavigation**: Barra de navegación inferior para dispositivos móviles
+- **FloatingActionButton**: Botón flotante responsive para crear posts
+
+#### 📁 Componentes de Contenido (`/content`)
+
+Componentes específicos del dominio de la aplicación:
+
+- **PostCard**: Tarjeta individual de post con truncamiento inteligente
+- **PostList**: Lista de posts con paginación y estados vacíos
+- **ReplyCard**: Tarjeta individual de respuesta con diseño compacto
+- **UserProfileHeader**: Header de perfil con información del usuario
 
 ### Gestión de Estado
 
@@ -230,25 +249,93 @@ La aplicación ha sido completamente refactorizada para mejorar la mantenibilida
 #### Eliminación de Código Duplicado
 
 - **~195 líneas de código eliminadas** a través de componentización
-- **6 nuevos componentes reutilizables** creados
+- **16 componentes reutilizables** organizados en estructura modular
 - **Consistencia visual** mejorada en toda la aplicación
+- **Arquitectura escalable** con separación clara de responsabilidades
 
-#### Componentes Creados
+#### Organización Modular de Componentes
 
-1. **TextAreaField**: Campo de textarea con validación y contador de caracteres
-2. **UserAvatar**: Sistema de avatares con 5 tamaños predefinidos
-3. **ReplyCard**: Tarjetas de respuesta con diseño compacto
-4. **ConfirmationModal**: Modales de confirmación reutilizables
-5. **FormActions**: Botones de formulario con estados de carga
-6. **EmptyState**: Estados vacíos con iconos y acciones
+La refactorización incluyó una reorganización completa de la estructura de componentes:
 
-#### Beneficios Obtenidos
+**Antes**: Estructura plana con componentes mezclados
+
+```
+src/components/
+├── AppHeader.vue
+├── PostCard.vue
+├── LoginForm.vue
+├── LoadingSpinner.vue
+└── ... (todos los componentes en un solo nivel)
+```
+
+**Después**: Estructura organizada por categorías funcionales
+
+```
+src/components/
+├── ui/           # 6 componentes básicos reutilizables
+├── forms/        # 4 componentes de formularios
+├── layout/       # 3 componentes de navegación
+└── content/      # 4 componentes específicos del dominio
+```
+
+#### Componentes por Categoría
+
+**UI/UX (6 componentes)**:
+
+- UserAvatar, LoadingSpinner, ErrorMessage, SuccessMessage, EmptyState, ConfirmationModal
+
+**Formularios (4 componentes)**:
+
+- TextAreaField, ReplyForm, FormActions, LoginForm
+
+**Layout/Navegación (3 componentes)**:
+
+- AppHeader, MobileNavigation, FloatingActionButton
+
+**Contenido/Dominio (4 componentes)**:
+
+- PostCard, PostList, ReplyCard, UserProfileHeader
+
+#### Beneficios de la Reorganización
 
 - **Mantenibilidad**: Cambios centralizados se reflejan en toda la app
+- **Escalabilidad**: Estructura clara para agregar nuevos componentes
+- **Reutilización**: Componentes categorizados y listos para futuras funcionalidades
+- **Colaboración**: Estructura intuitiva para equipos de desarrollo
 - **Consistencia**: Comportamiento uniforme en componentes similares
-- **Reutilización**: Componentes listos para futuras funcionalidades
 - **Accesibilidad**: Mejor soporte para lectores de pantalla
 - **UX Mejorada**: Validación y feedback más consistentes
+- **Organización**: Fácil localización y mantenimiento de componentes
+
+#### Uso de Componentes Organizados
+
+Con la nueva estructura, los imports siguen un patrón claro y semántico:
+
+```javascript
+// Componentes UI básicos
+import UserAvatar from "@/components/ui/UserAvatar.vue";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import ConfirmationModal from "@/components/ui/ConfirmationModal.vue";
+
+// Componentes de formularios
+import TextAreaField from "@/components/forms/TextAreaField.vue";
+import FormActions from "@/components/forms/FormActions.vue";
+
+// Componentes de layout
+import AppHeader from "@/components/layout/AppHeader.vue";
+import MobileNavigation from "@/components/layout/MobileNavigation.vue";
+
+// Componentes de contenido
+import PostCard from "@/components/content/PostCard.vue";
+import ReplyCard from "@/components/content/ReplyCard.vue";
+```
+
+Esta organización facilita:
+
+- **Imports intuitivos**: Fácil identificación del tipo de componente
+- **Mantenimiento**: Localización rápida de componentes por categoría
+- **Desarrollo en equipo**: Separación clara de responsabilidades
+- **Escalabilidad**: Estructura preparada para crecimiento futuro
 
 ---
 
