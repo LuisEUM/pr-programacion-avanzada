@@ -141,15 +141,15 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSessionStore } from '@/store/session';
 import api from '@/api';
-import ReplyForm from '@/components/ReplyForm.vue';
-import AppHeader from '@/components/AppHeader.vue';
-import MobileNavigation from '@/components/MobileNavigation.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
-import UserAvatar from '@/components/UserAvatar.vue';
-import ReplyCard from '@/components/ReplyCard.vue';
-import EmptyState from '@/components/EmptyState.vue';
-import ConfirmationModal from '@/components/ConfirmationModal.vue';
+import ReplyForm from '@/components/forms/ReplyForm.vue';
+import AppHeader from '@/components/layout/AppHeader.vue';
+import MobileNavigation from '@/components/layout/MobileNavigation.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
+import UserAvatar from '@/components/ui/UserAvatar.vue';
+import ReplyCard from '@/components/content/ReplyCard.vue';
+import EmptyState from '@/components/ui/EmptyState.vue';
+import ConfirmationModal from '@/components/ui/ConfirmationModal.vue';
 
 // Composables de Vue Router y store
 const route = useRoute();

@@ -81,12 +81,12 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSessionStore } from '@/store/session';
 import api from '@/api';
-import UserProfileHeader from '@/components/UserProfileHeader.vue';
-import PostList from '@/components/PostList.vue';
-import AppHeader from '@/components/AppHeader.vue';
-import MobileNavigation from '@/components/MobileNavigation.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import UserProfileHeader from '@/components/content/UserProfileHeader.vue';
+import PostList from '@/components/content/PostList.vue';
+import AppHeader from '@/components/layout/AppHeader.vue';
+import MobileNavigation from '@/components/layout/MobileNavigation.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 
 // Composables de Vue Router y store
 const route = useRoute();

@@ -37,9 +37,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSessionStore } from '@/store/session';
-import LoginForm from '@/components/LoginForm.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import LoginForm from '@/components/forms/LoginForm.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 
 // Composables de Vue Router y store de sesión
 const router = useRouter();

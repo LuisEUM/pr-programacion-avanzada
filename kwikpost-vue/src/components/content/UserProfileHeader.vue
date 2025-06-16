@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import UserAvatar from './UserAvatar.vue';
+import UserAvatar from '@/components/ui/UserAvatar.vue';
 
 // Definición de props del componente
 const props = defineProps({

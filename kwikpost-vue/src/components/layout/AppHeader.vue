@@ -124,8 +124,8 @@
 
 <script setup>
 import { useSessionStore } from '@/store/session';
-import FloatingActionButton from './FloatingActionButton.vue';
-import UserAvatar from './UserAvatar.vue';
+import FloatingActionButton from '@/components/layout/FloatingActionButton.vue';
+import UserAvatar from '@/components/ui/UserAvatar.vue';
 
 // Store de sesión
 const sessionStore = useSessionStore();

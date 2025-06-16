@@ -84,13 +84,13 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from '@/api';
-import AppHeader from '@/components/AppHeader.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
-import SuccessMessage from '@/components/SuccessMessage.vue';
-import TextAreaField from '@/components/TextAreaField.vue';
-import FormActions from '@/components/FormActions.vue';
-import MobileNavigation from '@/components/MobileNavigation.vue';
+import AppHeader from '@/components/layout/AppHeader.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
+import SuccessMessage from '@/components/ui/SuccessMessage.vue';
+import TextAreaField from '@/components/forms/TextAreaField.vue';
+import FormActions from '@/components/forms/FormActions.vue';
+import MobileNavigation from '@/components/layout/MobileNavigation.vue';
 
 // Composables de Vue Router
 const route = useRoute();

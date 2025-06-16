@@ -55,8 +55,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import PostCard from './PostCard.vue';
-import EmptyState from './EmptyState.vue';
+import PostCard from '@/components/content/PostCard.vue';
+import EmptyState from '@/components/ui/EmptyState.vue';
 
 // Definición de props para control de paginación y datos
 const props = defineProps({

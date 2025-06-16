@@ -66,7 +66,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import UserAvatar from './UserAvatar.vue';
+import UserAvatar from '@/components/ui/UserAvatar.vue';
 
 // Definición de props que recibe el componente
 const props = defineProps({

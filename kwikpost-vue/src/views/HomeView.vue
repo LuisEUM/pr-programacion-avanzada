@@ -67,11 +67,11 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSessionStore } from '@/store/session';
 import api from '@/api';
-import PostList from '@/components/PostList.vue';
-import AppHeader from '@/components/AppHeader.vue';
-import MobileNavigation from '@/components/MobileNavigation.vue';
-import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import PostList from '@/components/content/PostList.vue';
+import AppHeader from '@/components/layout/AppHeader.vue';
+import MobileNavigation from '@/components/layout/MobileNavigation.vue';
+import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 
 // Composables de Vue Router y store
 const router = useRouter();
