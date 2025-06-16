@@ -20,42 +20,22 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Header con navegación y acciones -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-      <div class="max-w-4xl mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <!-- Enlace de regreso al home -->
-          <router-link to="/" class="text-xl font-bold text-gray-900 hover:text-primary-600">
-            ← KwikPost
-          </router-link>
-          <div class="flex items-center space-x-3">
-            <!-- Botón para crear nuevo post - responsive (flotante en mobile, inline en desktop) -->
-            <router-link 
-              to="/post/form"
-              class="fixed bottom-20 right-6 bg-primary-500 hover:bg-primary-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors duration-200 z-50 md:relative md:bottom-0 md:right-0 md:w-auto md:h-auto md:rounded-lg md:px-4 md:py-2"
-            >
-              <svg class="w-6 h-6 md:w-5 md:h-5 md:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-              </svg>
-              <span class="hidden md:inline">Nuevo Post</span>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppHeader 
+      :show-back-arrow="true" 
+      :show-floating-button="true"
+      :show-home-icon="true"
+      :hide-profile-avatar="isOwnProfile"
+      :show-logout-button="true"
+    />
 
     <!-- Contenido principal del perfil -->
     <main class="max-w-4xl mx-auto px-4 py-6 pb-20 md:pb-6">
       <div class="space-y-6">
         <!-- Indicador de carga para datos del usuario -->
-        <div v-if="loadingUser" class="text-center py-8">
-          <div class="inline-flex items-center px-4 py-2 text-sm text-gray-600">
-            <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Cargando perfil...
-          </div>
-        </div>
+        <LoadingSpinner 
+          v-if="loadingUser" 
+          message="Cargando perfil..." 
+        />
 
         <!-- Componente de header del perfil con información del usuario -->
         <UserProfileHeader v-if="user" :user="user" />
@@ -68,15 +48,10 @@
           </h3>
 
           <!-- Indicador de carga para posts (solo cuando no hay posts cargados) -->
-          <div v-if="loadingPosts && posts.length === 0" class="text-center py-8">
-            <div class="inline-flex items-center px-4 py-2 text-sm text-gray-600">
-              <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Cargando posts...
-            </div>
-          </div>
+          <LoadingSpinner 
+            v-if="loadingPosts && posts.length === 0" 
+            message="Cargando posts..." 
+          />
 
           <!-- Componente de lista de posts con paginación -->
           <PostList
@@ -87,63 +62,31 @@
             :offset="offset"
             @load-more="loadMorePosts"
             @select-post="goToPost"
+            @create-post="goToCreatePost"
           />
         </div>
 
         <!-- Mensaje de error -->
-        <div v-if="errorMessage" class="card p-4 bg-red-50 border-red-200">
-          <p class="text-red-600 text-sm text-center">
-            {{ errorMessage }}
-          </p>
-        </div>
+        <ErrorMessage v-if="errorMessage" :message="errorMessage" />
       </div>
     </main>
 
     <!-- Barra de navegación inferior para dispositivos móviles -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-40">
-      <div class="flex items-center justify-around py-2">
-        <!-- Home -->
-        <router-link 
-          to="/" 
-          class="flex flex-col items-center p-2 text-gray-400"
-        >
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-          </svg>
-        </router-link>
-        
-        <!-- Perfil (activo cuando se está viendo el perfil del usuario logueado) -->
-        <router-link 
-          v-if="sessionStore.user?.username"
-          :to="`/profile/${sessionStore.user.username}`"
-          class="flex flex-col items-center p-2 text-primary-600"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-          </svg>
-        </router-link>
-        
-        <!-- Botón de logout -->
-        <button 
-          @click="handleLogout"
-          class="flex flex-col items-center p-2 text-gray-400"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1"/>
-          </svg>
-        </button>
-      </div>
-    </nav>
+    <MobileNavigation />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSessionStore } from '@/store/session';
 import api from '@/api';
 import UserProfileHeader from '@/components/UserProfileHeader.vue';
 import PostList from '@/components/PostList.vue';
+import AppHeader from '@/components/AppHeader.vue';
+import MobileNavigation from '@/components/MobileNavigation.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 // Composables de Vue Router y store
 const route = useRoute();
@@ -159,6 +102,11 @@ const offset = ref(0); // Desplazamiento para paginación
 const loadingUser = ref(false); // Estado de carga del usuario
 const loadingPosts = ref(false); // Estado de carga de posts
 const errorMessage = ref(''); // Mensajes de error
+
+// Computed property para determinar si es el perfil del usuario actual
+const isOwnProfile = computed(() => {
+  return user.value?.username === sessionStore.user?.username;
+});
 
 /**
  * Función para cargar los datos del usuario desde la API
@@ -246,6 +194,13 @@ const loadMorePosts = () => {
  */
 const goToPost = (postId) => {
   router.push(`/post/${postId}`);
+};
+
+/**
+ * Navegación para crear un nuevo post
+ */
+const goToCreatePost = () => {
+  router.push('/post/form');
 };
 
 /**

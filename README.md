@@ -105,22 +105,61 @@ node api.js
 
 ### 🎨 Interfaz de Usuario
 
+#### Diseño y Responsividad
+
 - Diseño responsive para móvil y desktop
 - Navegación sticky con indicadores visuales
-- Botón flotante para crear posts en móvil
+- Botón flotante para crear posts que se adapta al dispositivo
 - Barra de navegación inferior en dispositivos móviles
+- Header unificado con iconos de navegación y logout
+
+#### Componentes Reutilizables
+
+- Sistema de avatares con 5 tamaños predefinidos
+- Campos de formulario con validación en tiempo real
+- Modales de confirmación para acciones destructivas
+- Estados vacíos con iconos y acciones personalizables
+- Botones de acción con estados de carga
+
+#### Experiencia de Usuario
+
 - Estados de carga y mensajes de error informativos
 - Contador de caracteres en tiempo real
+- Validación que solo aparece tras interacción del usuario
+- Feedback visual consistente en toda la aplicación
+- Navegación intuitiva con iconos y tooltips
 
 ## 🏗️ Arquitectura del Proyecto
 
 ### Componentes Principales
 
-- **LoginForm**: Formulario reutilizable de autenticación
+#### Componentes de Layout y Navegación
+
+- **AppHeader**: Header reutilizable con navegación, avatares y botones de acción
+- **MobileNavigation**: Barra de navegación inferior para dispositivos móviles
+- **FloatingActionButton**: Botón flotante responsive para crear posts
+
+#### Componentes de Contenido
+
 - **PostCard**: Tarjeta individual de post con truncamiento inteligente
-- **PostList**: Lista de posts con paginación
-- **ReplyForm**: Formulario para crear/editar respuestas
+- **PostList**: Lista de posts con paginación y estados vacíos
+- **ReplyCard**: Tarjeta individual de respuesta con diseño compacto
 - **UserProfileHeader**: Header de perfil con información del usuario
+- **UserAvatar**: Avatar de usuario con tamaños configurables (xs, sm, md, lg, xl)
+
+#### Componentes de Formularios
+
+- **TextAreaField**: Campo de textarea reutilizable con validación en tiempo real
+- **ReplyForm**: Formulario para crear/editar respuestas
+- **FormActions**: Grupo de botones para formularios con estados de carga
+
+#### Componentes de UI/UX
+
+- **LoadingSpinner**: Indicador de carga con mensajes personalizables
+- **ErrorMessage**: Componente para mostrar mensajes de error
+- **SuccessMessage**: Componente para mostrar mensajes de éxito
+- **EmptyState**: Estado vacío reutilizable con iconos y acciones opcionales
+- **ConfirmationModal**: Modal de confirmación para acciones destructivas
 
 ### Gestión de Estado
 
@@ -146,6 +185,8 @@ node api.js
 - Contenido obligatorio en posts y respuestas
 - Límite de caracteres con indicador visual
 - Validación de sesión robusta (token + datos de usuario)
+- Validación inteligente que solo muestra errores tras interacción
+- Feedback visual inmediato con contadores de caracteres
 
 ### Navegación
 
@@ -158,6 +199,8 @@ node api.js
 - Layout adaptativo para diferentes tamaños de pantalla
 - Navegación optimizada para móvil con barra inferior
 - Botones flotantes que se adaptan al dispositivo
+- Header con funcionalidades específicas por vista
+- Componentes que se ocultan/muestran según el contexto (ej: avatar en perfil propio)
 
 ## 📱 Experiencia de Usuario
 
@@ -166,6 +209,10 @@ node api.js
 - **Navegación Fluida**: Transiciones suaves entre vistas
 - **Feedback Visual**: Estados activos y hover effects
 - **Accesibilidad**: Labels apropiados y navegación por teclado
+- **Validación Inteligente**: Errores solo tras interacción del usuario
+- **Estados Vacíos**: Mensajes informativos con acciones sugeridas
+- **Confirmaciones**: Modales para acciones destructivas
+- **Logout Accesible**: Botón de cierre de sesión en desktop y móvil
 
 ## 🔄 Flujo de Datos
 
@@ -174,4 +221,35 @@ node api.js
 3. **Navegación**: Router → Guards → Verificación de sesión → Redirección
 4. **Estado**: Pinia Store → Reactividad → Componentes → Persistencia
 
-La aplicación está completamente funcional y lista para uso en producción, con todas las características principales implementadas y optimizadas para una experiencia de usuario fluida.
+## 🔧 Refactorización y Componentización
+
+### Mejoras Implementadas
+
+La aplicación ha sido completamente refactorizada para mejorar la mantenibilidad y reutilización del código:
+
+#### Eliminación de Código Duplicado
+
+- **~195 líneas de código eliminadas** a través de componentización
+- **6 nuevos componentes reutilizables** creados
+- **Consistencia visual** mejorada en toda la aplicación
+
+#### Componentes Creados
+
+1. **TextAreaField**: Campo de textarea con validación y contador de caracteres
+2. **UserAvatar**: Sistema de avatares con 5 tamaños predefinidos
+3. **ReplyCard**: Tarjetas de respuesta con diseño compacto
+4. **ConfirmationModal**: Modales de confirmación reutilizables
+5. **FormActions**: Botones de formulario con estados de carga
+6. **EmptyState**: Estados vacíos con iconos y acciones
+
+#### Beneficios Obtenidos
+
+- **Mantenibilidad**: Cambios centralizados se reflejan en toda la app
+- **Consistencia**: Comportamiento uniforme en componentes similares
+- **Reutilización**: Componentes listos para futuras funcionalidades
+- **Accesibilidad**: Mejor soporte para lectores de pantalla
+- **UX Mejorada**: Validación y feedback más consistentes
+
+---
+
+La aplicación está completamente funcional y lista para uso en producción, con todas las características principales implementadas, optimizadas para una experiencia de usuario fluida y con una arquitectura de componentes robusta y mantenible.

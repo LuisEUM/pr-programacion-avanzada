@@ -27,9 +27,14 @@
     />
     
     <!-- Estado vacío: cuando no hay posts para mostrar -->
-    <div v-if="posts.length === 0" class="text-center py-8">
-      <p class="text-gray-500">No hay posts para mostrar</p>
-    </div>
+    <EmptyState
+      v-if="posts.length === 0"
+      title="No hay posts disponibles"
+      message="Aún no hay publicaciones para mostrar. ¡Sé el primero en crear una!"
+      :show-action="true"
+      action-text="Crear post"
+      @action="$emit('create-post')"
+    />
     
     <!-- Control de paginación: botón cargar más -->
     <div v-if="showLoadMore" class="text-center pt-4">
@@ -51,6 +56,7 @@
 <script setup>
 import { computed } from 'vue';
 import PostCard from './PostCard.vue';
+import EmptyState from './EmptyState.vue';
 
 // Definición de props para control de paginación y datos
 const props = defineProps({
@@ -73,7 +79,7 @@ const props = defineProps({
 });
 
 // Definición de eventos que puede emitir
-const emit = defineEmits(['load-more', 'select-post']);
+const emit = defineEmits(['load-more', 'select-post', 'create-post']);
 
 // Computed property para determinar si mostrar el botón "Cargar más"
 // Compara la posición actual (offset + limit) con el total de elementos

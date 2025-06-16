@@ -22,11 +22,12 @@
     <!-- Layout principal responsive -->
     <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
       <!-- Avatar principal del usuario -->
-      <img 
+      <UserAvatar 
         :src="user.avatarUrl" 
         :alt="`Avatar de ${user.name}`"
-        class="w-24 h-24 rounded-full object-cover flex-shrink-0"
-      >
+        size="xl"
+        class="flex-shrink-0"
+      />
       
       <!-- Sección de información del usuario -->
       <div class="flex-grow text-center sm:text-left">
@@ -55,6 +56,8 @@
 </template>
 
 <script setup>
+import UserAvatar from './UserAvatar.vue';
+
 // Definición de props del componente
 const props = defineProps({
   user: {

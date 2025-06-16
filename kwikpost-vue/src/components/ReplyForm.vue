@@ -21,65 +21,33 @@
 <template>
   <div class="card p-4">
     <form @submit.prevent="handleSubmit">
-      <!-- Campo de texto principal con validación -->
-      <div class="mb-4">
-        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
-          {{ initialContent ? 'Editar respuesta' : 'Escribe una respuesta' }}
-        </label>
-        <textarea
-          id="content"
-          v-model="content"
-          class="textarea"
-          rows="3"
-          placeholder="¿Qué piensas sobre esto?"
-          :class="{ 'border-red-500': contentError }"
-        ></textarea>
-        
-        <!-- Área de feedback: errores y contador de caracteres -->
-        <div class="flex justify-between items-center mt-2">
-          <!-- Mensaje de error de validación -->
-          <span 
-            v-if="contentError" 
-            class="text-red-500 text-sm"
-          >
-            {{ contentError }}
-          </span>
-          <!-- Contador de caracteres con indicador visual de límite -->
-          <span 
-            class="text-sm"
-            :class="content.length > 280 ? 'text-red-500' : 'text-gray-500'"
-          >
-            {{ content.length }}/280
-          </span>
-        </div>
-      </div>
+      <!-- Campo de texto principal con validación usando componente reutilizable -->
+      <TextAreaField
+        v-model="content"
+        :label="initialContent ? 'Editar respuesta' : 'Escribe una respuesta'"
+        placeholder="¿Qué piensas sobre esto?"
+        :rows="3"
+        :max-length="280"
+        field-id="reply-content"
+      />
       
-      <!-- Botones de acción contextuales -->
-      <div class="flex justify-end space-x-2">
-        <!-- Botón cancelar (solo en modo edición) -->
-        <button
-          v-if="initialContent"
-          type="button"
-          @click="$emit('cancel')"
-          class="btn-secondary"
-        >
-          Cancelar
-        </button>
-        <!-- Botón de envío principal -->
-        <button
-          type="submit"
-          :disabled="!isValid"
-          class="btn-primary"
-        >
-          {{ initialContent ? 'Actualizar' : 'Responder' }}
-        </button>
-      </div>
+      <!-- Botones de acción usando componente reutilizable -->
+      <FormActions
+        :disabled="!isValid"
+        :cancel-text="'Cancelar'"
+        :submit-text="initialContent ? 'Actualizar' : 'Responder'"
+        :show-cancel="!!initialContent"
+        @cancel="$emit('cancel')"
+        @submit="handleSubmit"
+      />
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue';
+import TextAreaField from './TextAreaField.vue';
+import FormActions from './FormActions.vue';
 
 // Definición de props del componente
 const props = defineProps({
@@ -99,19 +67,7 @@ const emit = defineEmits(['submit', 'cancel']);
 // Estado reactivo del contenido del formulario
 const content = ref(props.initialContent);
 
-// Computed property para validación del contenido
-// Maneja múltiples reglas de validación con mensajes específicos
-const contentError = computed(() => {
-  if (content.value.trim().length === 0) {
-    return 'El contenido no puede estar vacío';
-  }
-  if (content.value.length > 280) {
-    return 'El contenido no puede superar los 280 caracteres';
-  }
-  return null;
-});
-
-// Computed property para determinar si el formulario es válido
+// Computed property para determinar si el formulario es válido (simplificado gracias al componente TextAreaField)
 // Usado para habilitar/deshabilitar el botón de envío
 const isValid = computed(() => {
   return content.value.trim().length > 0 && content.value.length <= 280;

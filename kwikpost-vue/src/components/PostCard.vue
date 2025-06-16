@@ -26,11 +26,11 @@
     <!-- Header con información del autor y timestamp -->
     <div class="flex items-center space-x-3 mb-3">
       <!-- Avatar del autor -->
-      <img 
+      <UserAvatar 
         :src="post.author.avatarUrl" 
         :alt="`Avatar de ${post.author.name}`"
-        class="w-10 h-10 rounded-full object-cover"
-      >
+        size="md"
+      />
       <!-- Información del autor -->
       <div>
         <h3 class="font-semibold text-gray-900">{{ post.author.name }}</h3>
@@ -66,6 +66,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import UserAvatar from './UserAvatar.vue';
 
 // Definición de props que recibe el componente
 const props = defineProps({
